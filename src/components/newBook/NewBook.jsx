@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 
 
-const NewBook = () => {
+const NewBook = ({ onAddBook }) => {
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
     const [rating, setRating] = useState("");
@@ -10,39 +10,39 @@ const NewBook = () => {
     const [imageUrl, setImageUrl] = useState("");
 
     const changeTitleHandler = (event) => {
-        setTitle(event.target.value)
-    }
+        setTitle(event.target.value);
+    };
     const changeAuthorHandler = (event) => {
-        setAuthor(event.target.value)
-    }
+        setAuthor(event.target.value);
+    };
     const changeRatingHandler = (event) => {
-        setRating(event.target.value)
-    }
+        setRating(event.target.value);
+    };
     const changePageCount = (event) => {
-        setPageCount(event.target.value)
-    }
+        setPageCount(event.target.value);
+    };
     const changeImageUrl = (event) => {
-        setImageUrl(event.target.value)
-    }
+        setImageUrl(event.target.value);
+    };
 
     const submitBookHandler = (event) => {
         event.preventDefault();
         const newBook = {
-            title,
-            author,
-            rating: rating !== ""
+            bookTitle: title,
+            bookAuthor: author,
+            bookRating: rating !== ""
                 ? Array(parseInt(rating, 10)).fill("*")
                 : Array(0),
             pageCount: parseInt(pageCount, 10),
             imageUrl
         };
-        console.log(newBook);
+        onAddBook(newBook);
         setTitle("");
         setAuthor("");
         setPageCount("");
         setRating("");
         setImageUrl("");
-    }
+    };
     return (
         <Card className="m-4 w-50" bg="success">
             <Card.Body>
