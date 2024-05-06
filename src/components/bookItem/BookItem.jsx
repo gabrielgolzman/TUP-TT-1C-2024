@@ -1,14 +1,11 @@
 import PropTypes from "prop-types";
 import { Button, Card } from "react-bootstrap";
-import { useState } from "react"
 
-const BookItem = ({ title, author, rating, pages, imageUrl }) => {
-  const [bookTitle, setBookTitle] = useState(title);
+const BookItem = ({ title, author, rating, pages, imageUrl, onBookSelected }) => {
 
   const clickHandler = () => {
-    setBookTitle("Actualizado!")
-    console.log(bookTitle)
-  }
+    onBookSelected(title);
+  };
 
   return (
     <Card className="mx-3 mb-2" style={{ width: "22rem" }}>
@@ -23,11 +20,12 @@ const BookItem = ({ title, author, rating, pages, imageUrl }) => {
         }
       />
       <Card.Body>
-        <Card.Title>{bookTitle}</Card.Title>
+        <Card.Title>{title}</Card.Title>
         <Card.Subtitle>{author}</Card.Subtitle>
         <div>{rating?.length} estrellas</div>
         <p>{pages} páginas</p>
-        <Button onClick={clickHandler}>Actualizar titulo</Button>
+        <Button onClick={clickHandler}>Seleccionar libro</Button>
+        <Button className="ms-2" variant="danger" onClick={() => { }}>Eliminar libro</Button>
       </Card.Body>
     </Card>
   );

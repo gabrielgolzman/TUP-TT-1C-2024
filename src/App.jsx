@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import Books from "./components/books/Books";
 import NewBook from "./components/newBook/NewBook";
+import Login from "./components/login/Login";
 
 const BOOKS = [
   {
@@ -44,6 +45,18 @@ const BOOKS = [
 
 const App = () => {
   const [books, setBooks] = useState(BOOKS);
+  const [booksFiltered, setBooksFiltered] = useState(BOOKS);
+
+
+  const searchHandler = (searchInput) => {
+    if (searchInput === "") setBooksFiltered(books);
+
+    const searchInputUpperCase = searchInput.toUpperCase();
+    const booksSearched = books.filter((book) =>
+      book.bookTitle.toUpperCase().includes(searchInputUpperCase)
+    );
+    setBooksFiltered(booksSearched);
+  };
 
   const addBookHandler = (newBook) => {
     const bookData = { ...newBook, bookId: Math.random() };
@@ -52,10 +65,11 @@ const App = () => {
 
   return (
     <div className="d-flex flex-column align-items-center">
+      {/* <Login /> */}
       <h2>¡Bienvenidos a Books Champion!</h2>
       <p>¡Quiero leer libros!</p>
       <NewBook onAddBook={addBookHandler} />
-      <Books books={books} />
+      <Books books={booksFiltered} onSearch={searchHandler} />
     </div>
   );
 };
