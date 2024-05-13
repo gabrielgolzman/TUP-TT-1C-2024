@@ -1,10 +1,22 @@
 import PropTypes from "prop-types";
 import { Button, Card } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-const BookItem = ({ title, author, rating, pages, imageUrl, onBookSelected }) => {
+const BookItem = ({ id, title, author, rating, pages, summary, imageUrl }) => {
+  const navigate = useNavigate();
 
   const clickHandler = () => {
-    onBookSelected(title);
+    navigate(`/book/${id}`, {
+      state: {
+        book: {
+          title,
+          author,
+          pages,
+          summary,
+          imageUrl,
+        },
+      },
+    });
   };
 
   return (
@@ -25,7 +37,9 @@ const BookItem = ({ title, author, rating, pages, imageUrl, onBookSelected }) =>
         <div>{rating?.length} estrellas</div>
         <p>{pages} páginas</p>
         <Button onClick={clickHandler}>Seleccionar libro</Button>
-        <Button className="ms-2" variant="danger" onClick={() => { }}>Eliminar libro</Button>
+        <Button className="ms-2" variant="danger" onClick={() => {}}>
+          Eliminar libro
+        </Button>
       </Card.Body>
     </Card>
   );

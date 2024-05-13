@@ -1,8 +1,8 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-const Protected = ({ isSignedIn, children }) => {
+const Protected = ({ isSignedIn }) => {
   if (!isSignedIn) return <Navigate to="/login" replace />;
-  return children;
+  return <Outlet />;
 };
 
 export default Protected;
