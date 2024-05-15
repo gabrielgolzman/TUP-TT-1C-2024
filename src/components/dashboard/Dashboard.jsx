@@ -1,6 +1,8 @@
 import { useState } from "react";
 import NewBook from "../newBook/NewBook";
 import Books from "../books/Books";
+import { Button, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const books = [
   {
@@ -49,8 +51,9 @@ const books = [
   },
 ];
 
-const Dashboard = () => {
+const Dashboard = ({ onLogOut }) => {
   const [booksFiltered, setBooksFiltered] = useState(books);
+  const navigate = useNavigate();
 
   const searchHandler = (searchInput) => {
     if (searchInput === "") setBooksFiltered(books);
@@ -62,12 +65,22 @@ const Dashboard = () => {
     setBooksFiltered(booksSearched);
   };
 
+  const handleLogOut = () => {
+    onLogOut();
+    navigate("/login");
+  };
+
   const addBookHandler = (newBook) => {
     const bookData = { ...newBook, bookId: Math.random() };
     setBooksFiltered((prev) => [bookData, ...prev]);
   };
   return (
     <>
+      <Row className="my-3 justify-content-end w-100">
+        <Button className="w-auto me-3" onClick={handleLogOut}>
+          Cerrar sesión
+        </Button>
+      </Row>
       <h2>¡Bienvenidos a Books Champion!</h2>
       <p>¡Quiero leer libros!</p>
       <NewBook onAddBook={addBookHandler} />
