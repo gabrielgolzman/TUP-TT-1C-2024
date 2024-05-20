@@ -74,6 +74,10 @@ const Dashboard = ({ onLogOut }) => {
     const bookData = { ...newBook, bookId: Math.random() };
     setBooksFiltered((prev) => [bookData, ...prev]);
   };
+
+  const deleteBookHandler = (id) => {
+    setBooksFiltered(prevBooks => prevBooks.filter(book => book.id !== id));
+  };
   return (
     <>
       <Row className="my-3 justify-content-end w-100">
@@ -84,7 +88,7 @@ const Dashboard = ({ onLogOut }) => {
       <h2>¡Bienvenidos a Books Champion!</h2>
       <p>¡Quiero leer libros!</p>
       <NewBook onAddBook={addBookHandler} />
-      <Books books={booksFiltered} onSearch={searchHandler} />
+      <Books onDelete={deleteBookHandler} books={booksFiltered} onSearch={searchHandler} />
     </>
   );
 };

@@ -2,8 +2,12 @@ import PropTypes from "prop-types";
 import { Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const BookItem = ({ id, title, author, rating, pages, summary, imageUrl }) => {
+const BookItem = ({ id, title, author, rating, pages, summary, imageUrl, onShowModal }) => {
   const navigate = useNavigate();
+
+  const modalShowHandler = () => {
+    onShowModal(id);
+  };
 
   const clickHandler = () => {
     navigate(`/book/${id}`, {
@@ -37,7 +41,7 @@ const BookItem = ({ id, title, author, rating, pages, summary, imageUrl }) => {
         <div>{rating?.length} estrellas</div>
         <p>{pages} páginas</p>
         <Button onClick={clickHandler}>Seleccionar libro</Button>
-        <Button className="ms-2" variant="danger" onClick={() => {}}>
+        <Button className="ms-2" variant="danger" onClick={modalShowHandler}>
           Eliminar libro
         </Button>
       </Card.Body>
