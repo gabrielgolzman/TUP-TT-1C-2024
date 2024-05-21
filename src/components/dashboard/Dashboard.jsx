@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NewBook from "../newBook/NewBook";
 import Books from "../books/Books";
 import { Button, Row } from "react-bootstrap";
@@ -52,6 +52,8 @@ const books = [
 ];
 
 const Dashboard = ({ onLogOut }) => {
+  console.log("In Dashboard");
+
   const [booksFiltered, setBooksFiltered] = useState(books);
   const navigate = useNavigate();
 
@@ -70,9 +72,18 @@ const Dashboard = ({ onLogOut }) => {
     navigate("/login");
   };
 
+  useEffect(() => {
+    const booksStored = JSON.parse(localStorage.getItem("books"));
+    if (booksStored)
+      setBooksFiltered([booksStored]);
+
+  }, []);
+
   const addBookHandler = (newBook) => {
     const bookData = { ...newBook, bookId: Math.random() };
-    setBooksFiltered((prev) => [bookData, ...prev]);
+    const newBooksArray = [bookData, ...booksFiltered];
+    setBooksFiltered(newBooksArray);
+    localStorage.setItem("books", JSON.stringify(newBooksArray));
   };
 
   const deleteBookHandler = (id) => {

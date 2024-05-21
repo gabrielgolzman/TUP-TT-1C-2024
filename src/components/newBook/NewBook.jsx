@@ -113,6 +113,11 @@ const NewBook = ({ onAddBook }) => {
                     <Row className="justify-content-end">
                         <Col md={3} className="d-flex justify-content-end">
                             <Button
+                                disabled={
+                                    title === "" ||
+                                    author === "" ||
+                                    pageCount === "" ||
+                                    rating === ""}
                                 variant="primary"
                                 type="submit"
                             >
