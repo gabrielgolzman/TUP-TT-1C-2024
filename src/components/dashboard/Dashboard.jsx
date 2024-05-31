@@ -118,7 +118,14 @@ const Dashboard = ({ onLogOut }) => {
   };
 
   const deleteBookHandler = (id) => {
-    setBooksFiltered(prevBooks => prevBooks.filter(book => book.id !== id));
+    fetch(`http://localhost:8000/books/${id}`, {
+      method: "DELETE",
+
+    })
+      .then(() => {
+        setBooksFiltered(prevBooks => prevBooks.filter(book => book.id !== id));
+      })
+      .catch((error) => console.log(error));
   };
   return (
     <>
