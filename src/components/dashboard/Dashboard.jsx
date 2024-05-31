@@ -54,7 +54,7 @@ const books = [
 const Dashboard = ({ onLogOut }) => {
   console.log("In Dashboard");
 
-  const [booksFiltered, setBooksFiltered] = useState(books);
+  const [booksFiltered, setBooksFiltered] = useState([]);
   const navigate = useNavigate();
 
   const searchHandler = (searchInput) => {
@@ -73,17 +73,48 @@ const Dashboard = ({ onLogOut }) => {
   };
 
   useEffect(() => {
-    const booksStored = JSON.parse(localStorage.getItem("books"));
-    if (booksStored)
-      setBooksFiltered([booksStored]);
+    fetch("http://localhost:8000/books", {
+      headers: {
+        accept: "application/json"
+      }
+    })
+      .then((response) => response.json())
+      .then((bookData) => {
+        const booksMapped = bookData
+          .map(book => ({
+            ...book,
+            bookRating: Array(book.bookRating?.length).fill("*"),
+
+          })).sort((a, b) => b.id - a.id);
+        setBooksFiltered(booksMapped);
+      })
+      .catch((error) => console.log(error));
 
   }, []);
 
   const addBookHandler = (newBook) => {
     const bookData = { ...newBook, bookId: Math.random() };
-    const newBooksArray = [bookData, ...booksFiltered];
-    setBooksFiltered(newBooksArray);
-    localStorage.setItem("books", JSON.stringify(newBooksArray));
+
+    fetch("http://localhost:8000/books", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify(bookData)
+    })
+      .then((response => {
+        if (response.ok)
+          return response.json();
+
+        else {
+          throw new Error("The response has some errors");
+        }
+      }))
+      .then(() => {
+        const newBooksArray = [bookData, ...booksFiltered];
+        setBooksFiltered(newBooksArray);
+      })
+      .catch((error) => console.log(error));
   };
 
   const deleteBookHandler = (id) => {
