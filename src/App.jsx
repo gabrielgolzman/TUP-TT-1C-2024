@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import Dashboard from "./components/dashboard/Dashboard";
@@ -8,31 +7,21 @@ import Protected from "./routes/Protected";
 import NotFound from "./routes/NotFound";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const loginHandler = () => {
-    setIsLoggedIn(true);
-  };
-
-  const logoutHandler = () => {
-    setIsLoggedIn(false);
-  };
-
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Protected isSignedIn={isLoggedIn} />,
+      element: <Protected />,
       children: [
         {
           path: "/",
-          element: <Dashboard onLogOut={logoutHandler} />,
+          element: <Dashboard />,
         },
         { path: "/book/:id", element: <BookDetails /> },
       ],
     },
     {
       path: "/login",
-      element: <Login onLogIn={loginHandler} />,
+      element: <Login />,
     },
     {
       path: "*",

@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
-import NewBook from "../newBook/NewBook";
-import Books from "../books/Books";
-import { Button, Row } from "react-bootstrap";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button, Row } from "react-bootstrap";
+
+import { AuthenticationContext } from "../../services/authentication/authentication.context";
+import Books from "../books/Books";
+import NewBook from "../newBook/NewBook";
+import ToggleTheme from "../toggleTheme/ToggleTheme";
 
 const books = [
   {
@@ -51,11 +54,11 @@ const books = [
   },
 ];
 
-const Dashboard = ({ onLogOut }) => {
-  console.log("In Dashboard");
-
+const Dashboard = () => {
   const [booksFiltered, setBooksFiltered] = useState([]);
   const navigate = useNavigate();
+
+  const { handleLogout } = useContext(AuthenticationContext);
 
   const searchHandler = (searchInput) => {
     if (searchInput === "") setBooksFiltered(books);
@@ -68,28 +71,27 @@ const Dashboard = ({ onLogOut }) => {
   };
 
   const handleLogOut = () => {
-    onLogOut();
+    handleLogout();
     navigate("/login");
   };
 
   useEffect(() => {
     fetch("http://localhost:8000/books", {
       headers: {
-        accept: "application/json"
-      }
+        accept: "application/json",
+      },
     })
       .then((response) => response.json())
       .then((bookData) => {
         const booksMapped = bookData
-          .map(book => ({
+          .map((book) => ({
             ...book,
             bookRating: Array(book.bookRating?.length).fill("*"),
-
-          })).sort((a, b) => b.id - a.id);
+          }))
+          .sort((a, b) => b.id - a.id);
         setBooksFiltered(booksMapped);
       })
       .catch((error) => console.log(error));
-
   }, []);
 
   const addBookHandler = (newBook) => {
@@ -98,18 +100,16 @@ const Dashboard = ({ onLogOut }) => {
     fetch("http://localhost:8000/books", {
       method: "POST",
       headers: {
-        "content-type": "application/json"
+        "content-type": "application/json",
       },
-      body: JSON.stringify(bookData)
+      body: JSON.stringify(bookData),
     })
-      .then((response => {
-        if (response.ok)
-          return response.json();
-
+      .then((response) => {
+        if (response.ok) return response.json();
         else {
           throw new Error("The response has some errors");
         }
-      }))
+      })
       .then(() => {
         const newBooksArray = [bookData, ...booksFiltered];
         setBooksFiltered(newBooksArray);
@@ -120,24 +120,30 @@ const Dashboard = ({ onLogOut }) => {
   const deleteBookHandler = (id) => {
     fetch(`http://localhost:8000/books/${id}`, {
       method: "DELETE",
-
     })
       .then(() => {
-        setBooksFiltered(prevBooks => prevBooks.filter(book => book.id !== id));
+        setBooksFiltered((prevBooks) =>
+          prevBooks.filter((book) => book.id !== id)
+        );
       })
       .catch((error) => console.log(error));
   };
   return (
     <>
       <Row className="my-3 justify-content-end w-100">
-        <Button className="w-auto me-3" onClick={handleLogOut}>
+        <ToggleTheme />
+        <Button className="w-auto my-2 me-3" onClick={handleLogOut}>
           Cerrar sesión
         </Button>
       </Row>
       <h2>¡Bienvenidos a Books Champion!</h2>
       <p>¡Quiero leer libros!</p>
       <NewBook onAddBook={addBookHandler} />
-      <Books onDelete={deleteBookHandler} books={booksFiltered} onSearch={searchHandler} />
+      <Books
+        onDelete={deleteBookHandler}
+        books={booksFiltered}
+        onSearch={searchHandler}
+      />
     </>
   );
 };

@@ -1,7 +1,11 @@
-import { useRef, useState } from "react";
-import { Button, Card, Col, Form, FormGroup, Row } from "react-bootstrap";
+import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-const Login = ({ onLogIn }) => {
+import { Button, Card, Col, Form, FormGroup, Row } from "react-bootstrap";
+
+import { AuthenticationContext } from "../../services/authentication/authentication.context";
+import ToggleTheme from "../toggleTheme/ToggleTheme";
+
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({
@@ -9,6 +13,8 @@ const Login = ({ onLogIn }) => {
     password: false,
   });
   const navigate = useNavigate();
+
+  const { handleLogin } = useContext(AuthenticationContext);
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -52,7 +58,7 @@ const Login = ({ onLogIn }) => {
     }));
     // alert(`El usuario ingresado es: ${email} y el password es: ${password}`);
 
-    onLogIn();
+    handleLogin(email);
     navigate("/");
   };
 
@@ -62,6 +68,7 @@ const Login = ({ onLogIn }) => {
         <Row>
           <h5>¡Bienvenidos a Books Champion!</h5>
         </Row>
+        <ToggleTheme />
         <Form onSubmit={submitHandler}>
           <FormGroup className="mb-4">
             <Form.Control
