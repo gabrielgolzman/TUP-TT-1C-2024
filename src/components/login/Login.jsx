@@ -4,6 +4,8 @@ import { Button, Card, Col, Form, FormGroup, Row } from "react-bootstrap";
 
 import { AuthenticationContext } from "../../services/authentication/authentication.context";
 import ToggleTheme from "../toggleTheme/ToggleTheme";
+import ComboLanguage from "../comboLanguage/ComboLanguage";
+import useTranslation from "../../custom/useTranslation";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,6 +15,7 @@ const Login = () => {
     password: false,
   });
   const navigate = useNavigate();
+  const translate = useTranslation();
 
   const { handleLogin } = useContext(AuthenticationContext);
 
@@ -66,8 +69,9 @@ const Login = () => {
     <Card className="mt-5 mx-3 p-3 px-5 shadow">
       <Card.Body>
         <Row>
-          <h5>¡Bienvenidos a Books Champion!</h5>
+          <h5>{translate("welcome")}</h5>
         </Row>
+        <ComboLanguage />
         <ToggleTheme />
         <Form onSubmit={submitHandler}>
           <FormGroup className="mb-4">
@@ -76,7 +80,7 @@ const Login = () => {
               type="email"
               className={errors.email ? "border border-danger" : ""}
               onChange={changeEmailHandler}
-              placeholder="Ingresar email"
+              placeholder={translate("email")}
             />
           </FormGroup>
           <FormGroup className="mb-4">
@@ -86,14 +90,14 @@ const Login = () => {
               value={password}
               className={errors.password ? "border border-danger" : ""}
               onChange={changePasswordHandler}
-              placeholder="Ingresar contraseña"
+              placeholder={translate("password")}
             />
           </FormGroup>
           <Row>
             <Col />
             <Col md={6} className="d-flex justify-content-end">
               <Button variant="secondary" type="submit">
-                Iniciar sesión
+                {translate("login")}
               </Button>
             </Col>
           </Row>
